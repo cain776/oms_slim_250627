@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eXmate slim - 개선안 v21</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <aside id="lnb" class="lnb">
+             <!-- LNB (Left Navigation Bar) -->
+            <header class="lnb-header">
+                <h1 class="lnb-logo">
+                    <span class="logo-main">eXmate</span>
+                    <span class="logo-sub">Slim</span>
+                </h1>
+            </header>
+            <nav class="flex-grow">
+                <ul>
+                    <li class="lnb-menu-item active" data-menu="home"><a href="#"><i data-lucide="home"></i><span class="lnb-menu-item-text">홈</span></a></li>
+                    <li class="lnb-menu-item" data-menu="announcement"><a href="#"><i data-lucide="bell"></i><span class="lnb-menu-item-text">공지사항</span></a></li>
+                    <li class="lnb-menu-item has-submenu">
+                        <a href="#"><i data-lucide="package"></i><span class="lnb-menu-item-text">입고 관리</span><i data-lucide="chevron-down" class="submenu-toggle-icon"></i></a>
+                        <div class="submenu"><div>
+                            <a href="#" data-menu="receipt-history">입고 내역</a>
+                            <a href="#" data-menu="receipt-register">입고 등록</a>
+                        </div></div>
+                    </li>
+                    <li class="lnb-menu-item has-submenu">
+                        <a href="#"><i data-lucide="send"></i><span class="lnb-menu-item-text">출고 관리</span><i data-lucide="chevron-down" class="submenu-toggle-icon"></i></a>
+                        <div class="submenu"><div>
+                            <a href="#" data-menu="shipment-history">출고 내역</a>
+                            <a href="#" data-menu="shipment-register">출고 등록</a>
+                        </div></div>
+                    </li>
+                    <li class="lnb-menu-item has-submenu">
+                        <a href="#"><i data-lucide="archive"></i><span class="lnb-menu-item-text">재고 관리</span><i data-lucide="chevron-down" class="submenu-toggle-icon"></i></a>
+                        <div class="submenu"><div>
+                            <a href="#" data-menu="inventory-adjustment">재고 조정</a>
+                        </div></div>
+                    </li>
+                    <li class="lnb-menu-item" data-menu="stats"><a href="#"><i data-lucide="bar-chart-2"></i><span class="lnb-menu-item-text">통계</span></a></li>
+                    <li class="lnb-menu-item" data-menu="settings"><a href="#"><i data-lucide="settings"></i><span class="lnb-menu-item-text">설정</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-area">
+            <header class="main-header">
+                <!-- Header -->
+                <div class="main-header-left">
+                    <div id="lnb-toggle" class="main-header-toggle"><i data-lucide="menu"></i></div>
+                     <div id="search-container" class="relative">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10"></i>
+                        <input id="search-input" type="text" placeholder="통합 검색..." class="relative w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:z-10">
+                        <!-- Search Popup -->
+                        <div id="search-popup">
+                            <div class="p-4">
+                                <h4 class="text-xs font-semibold text-gray-500 mb-2">바로 가기</h4>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button id="openMultiTrackModalBtn" class="bg-gray-100 rounded-md p-2 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition">
+                                        <i data-lucide="copy-check" class="w-6 h-6 text-gray-600 mb-1"></i><span class="font-semibold text-xs text-gray-700">복수화물조회</span>
+                                    </button>
+                                     <a href="#" class="bg-gray-100 rounded-md p-2 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition">
+                                        <i data-lucide="corner-down-left" class="w-6 h-6 text-gray-600 mb-1"></i><span class="font-semibold text-xs text-gray-700">회수</span>
+                                    </a>
+                                    <a href="#" class="bg-gray-100 rounded-md p-2 flex flex-col items-center justify-center text-center hover:bg-gray-200 transition">
+                                        <i data-lucide="archive" class="w-6 h-6 text-gray-600 mb-1"></i><span class="font-semibold text-xs text-gray-700">반송/보관</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="p-4">
+                                <h4 class="text-xs font-semibold text-gray-500 mb-3">지난 검색 내역</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex justify-between items-center group"><a href="#" class="text-gray-600 hover:text-blue-600">123456789012</a><button class="text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-4 h-4"></i></button></li>
+                                    <li class="flex justify-between items-center group"><a href="#" class="text-gray-600 hover:text-blue-600">A-Store 6월 출고건</a><button class="text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-4 h-4"></i></button></li>
+                                </ul>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+                <div class="main-header-right">
+                    <div class="main-header-icon"><i data-lucide="bell"></i></div><div class="main-header-icon"><i data-lucide="settings"></i></div><button id="logout-button" class="h-8 w-8 rounded-full"><img class="h-full w-full rounded-full" src="https://placehold.co/40x40/2563eb/ffffff?text=U" alt="User avatar"></button>
+                </div>
+            </header>
+            
+            <main class="main-content">
+                 <div id="homeView" class="main-content-view active p-6 lg:p-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
+                        <!-- Top Row Left: Summary -->
+                        <div class="lg:col-span-3 card p-6 flex flex-col">
+                            <h2 class="text-xl font-bold text-gray-800 flex-shrink-0">전체 지연 현황 요약</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 flex-grow">
+                                <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-center">
+                                    <p class="text-gray-500 font-semibold mb-2 flex items-center text-base"><i data-lucide="clock" class="w-5 h-5 mr-3"></i>전체 처리지연</p>
+                                    <div class="text-right"><span class="text-3xl font-bold text-blue-600">38</span><span class="ml-1 font-medium text-gray-800">건</span></div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-center">
+                                    <p class="text-gray-500 font-semibold mb-2 flex items-center text-base"><i data-lucide="alert-triangle" class="w-5 h-5 mr-3"></i>최장기 지연 (15+일)</p>
+                                    <div class="text-right"><span class="text-3xl font-bold text-red-600">5</span><span class="ml-1 font-medium text-gray-800">건</span></div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-center">
+                                    <p class="text-gray-500 font-semibold mb-2 flex items-center text-base"><i data-lucide="archive-x" class="w-5 h-5 mr-3"></i>최다 지연 사유</p>
+                                    <div class="flex justify-between items-baseline mt-1">
+                                        <span class="text-base font-semibold text-gray-700 truncate" title="미배송(사유발생)">미배송(사유발생)</span>
+                                        <div class="text-right"><span class="text-3xl font-bold text-orange-500">12</span><span class="ml-1 font-medium text-gray-800">건</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Row Right: Announcements -->
+                        <div class="lg:col-span-1 card p-6 flex flex-col">
+                            <div class="flex justify-between items-center mb-4 flex-shrink-0">
+                                <h3 class="text-xl font-bold text-gray-800">공지사항</h3>
+                                <a href="#" class="text-sm font-medium text-blue-600 hover:underline">더보기+</a>
+                            </div>
+                            <ul class="space-y-3 flex-grow">
+                                <li class="flex justify-between items-center text-sm"><a href="#" class="text-gray-700 hover:text-blue-600 truncate">[안내] 시스템 정기점검 안내 (06/20)</a><span class="text-gray-400 flex-shrink-0 ml-2">06-15</span></li>
+                                <li class="flex justify-between items-center text-sm"><a href="#" class="text-gray-700 hover:text-blue-600 truncate">[중요] 개인정보 처리방침 개정 안내</a><span class="text-gray-400 flex-shrink-0 ml-2">06-12</span></li>
+                                <li class="flex justify-between items-center text-sm"><a href="#" class="text-gray-700 hover:text-blue-600 truncate">[업데이트] v2.1 기능 업데이트 안내</a><span class="text-gray-400 flex-shrink-0 ml-2">06-10</span></li>
+                                <li class="flex justify-between items-center text-sm"><a href="#" class="text-gray-700 hover:text-blue-600 truncate">[공지] 일본 연휴 기간 배송 지연 안내</a><span class="text-gray-400 flex-shrink-0 ml-2">06-08</span></li>
+                                <li class="flex justify-between items-center text-sm"><a href="#" class="text-gray-700 hover:text-blue-600 truncate">[이벤트] 신규 고객 배송비 할인 이벤트</a><span class="text-gray-400 flex-shrink-0 ml-2">06-05</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Bottom Row Left: Table & Unreceived Status -->
+                        <div class="lg:col-span-3 card p-6 h-full flex flex-col">
+                            <h2 class="text-xl font-bold text-gray-800 flex-shrink-0">상태별 상세 현황</h2>
+                            
+                            <!-- Unreceived Status Section -->
+                            <div class="mt-4 border-t border-gray-200 pt-4">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 p-3 rounded-lg">
+                                   <p class="font-semibold text-gray-800 mb-2 sm:mb-0">미입고 현황</p>
+                                   <a href="#" class="text-blue-600 hover:text-blue-700 font-semibold text-sm inline-flex items-center">
+                                       <span>일별 입고 현황</span>
+                                       <i data-lucide="arrow-right" class="w-4 h-4 ml-1.5"></i>
+                                   </a>
+                                </div>
+                            </div>
+
+                            <div class="table-container mt-4 flex-grow">
+                                <table class="w-full text-sm text-left text-gray-500">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">상태</th><th scope="col" class="px-6 py-3 text-center">D+3</th><th scope="col" class="px-6 py-3 text-center">D+5</th>
+                                            <th scope="col" class="px-6 py-3 text-center">D+7</th><th scope="col" class="px-6 py-3 text-center">D+10</th><th scope="col" class="px-6 py-3 text-center text-red-600">D+15 이상</th>
+                                            <th scope="col" class="px-6 py-3 text-center font-bold">합계</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="status-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom Row Right: Links & Promotion -->
+                        <div class="lg:col-span-1 flex flex-col gap-6">
+                            <div class="card p-6">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <button id="openTrackingModalBtn" class="bg-gray-50 rounded-lg p-3 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition h-24">
+                                        <i data-lucide="search-check" class="w-7 h-7 text-blue-500 mb-2"></i><span class="font-semibold text-xs text-gray-700">화물추적 가이드</span>
+                                    </button>
+                                    <a href="#" class="bg-gray-50 rounded-lg p-3 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition h-24">
+                                        <i data-lucide="book-open" class="w-7 h-7 text-blue-500 mb-2"></i><span class="font-semibold text-xs text-gray-700">매뉴얼</span>
+                                    </a>
+                                    <a href="#" class="bg-gray-50 rounded-lg p-3 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition h-24">
+                                        <i data-lucide="building-2" class="w-7 h-7 text-blue-500 mb-2"></i><span class="font-semibold text-xs text-gray-700">회사소개</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card p-0 overflow-hidden relative flex-grow" id="promo-carousel-card">
+                                <div id="promo-slides" class="flex transition-transform duration-500 ease-in-out h-full rounded-lg">
+                                    <div class="w-full flex-shrink-0 h-full bg-promo-gradient flex items-center justify-center">
+                                        <img src="images/promo-banner.png" alt="프로모션 이미지" class="h-3/4 object-contain">
+                                    </div>
+                                </div>
+                                <div id="promo-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Other views -->
+                <div id="announcementView" class="main-content-view p-6"><div class="card p-6">공지사항 페이지</div></div>
+                <div id="receipt-historyView" class="main-content-view p-6"><div class="card p-6">입고 내역 페이지</div></div>
+                <div id="receipt-registerView" class="main-content-view p-6"><div class="card p-6">입고 등록 페이지</div></div>
+                <div id="shipment-historyView" class="main-content-view p-6"><div class="card p-6">출고 내역 페이지</div></div>
+                <div id="shipment-registerView" class="main-content-view p-6"><div class="card p-6">출고 등록 페이지</div></div>
+                <div id="statsView" class="main-content-view p-6"><div class="card p-6">통계 페이지</div></div>
+                <div id="settingsView" class="main-content-view p-6">
+                    <!-- 설정 콘텐츠 -->
+                    <h1 class="text-2xl font-bold">설정</h1>
+                    <p>애플리케이션 설정을 여기서 변경할 수 있습니다.</p>
+                </div>
+                <div id="inventory-adjustmentView" class="main-content-view hidden p-6 lg:p-8">
+                    <!-- 메인 목록 페이지 -->
+                    <div id="mainPage" class="page card">
+                        <h1 class="text-3xl font-extrabold text-slate-800 mb-8">상품 재고 목록</h1>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="w-24 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">셀러</th>
+                                        <th class="w-40 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">상품코드(SKU)</th>
+                                        <th class="w-80 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">상품명</th>
+                                        <th class="w-32 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">옵션코드</th>
+                                        <th class="w-24 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">옵션</th>
+                                        <th class="w-24 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">바코드</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">총 재고</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">총 출고예정</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">총 가용재고</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">안전재고</th>
+                                        <th class="w-36 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">센터</th>
+                                        <th class="w-16 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">존</th>
+                                        <th class="w-48 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">로케이션</th>
+                                        <th class="w-28 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">LOT 번호</th>
+                                        <th class="w-36 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">유통기한</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">현재재고</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">출고예정</th>
+                                        <th class="w-24 px-4 py-3 text-right font-medium text-slate-500 uppercase tracking-wider">가용재고</th>
+                                        <th class="w-36 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">상태</th>
+                                        <th class="w-40 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">최종 조정일시</th>
+                                        <th class="w-36 px-4 py-3 text-left font-medium text-slate-500 uppercase tracking-wider">최종 작업자(ID)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryList" class="bg-white">
+                                    <!-- JS로 목록 렌더링 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- 복수화물조회 Modal -->
+    <div id="multiTrackModal" class="modal-overlay">
+        <div class="modal-content max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800">복수화물 조회</h3>
+                <button id="closeMultiTrackModalBtn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x"></i></button>
+            </div>
+            <div id="multi-track-tabs" class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+                <ul class="flex flex-wrap -mb-px"><li class="mr-2"><button class="inline-block p-4 border-b-2 rounded-t-lg border-blue-600 text-blue-600" data-tab="tracking-no">운송장 번호</button></li><li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" data-tab="exm-no">EXM번호</button></li><li class="mr-2"><button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" data-tab="packing-no">패킹번호</button></li></ul>
+            </div>
+            <div class="mt-4">
+                <p class="text-sm text-gray-600 mb-2">선택 한 조건의 번호를 한 줄에 하나씩 입력해 주세요. (최대 20개)</p>
+                <textarea class="w-full h-48 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="123456789012&#10;123456789013&#10;..."></textarea>
+            </div>
+             <div class="mt-4 flex justify-end">
+                <button id="cancelMultiTrackBtn" class="px-6 py-2.5 text-sm font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 mr-2">취소</button>
+                <button class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700">조회</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 화물추적 가이드 Modal -->
+    <div id="trackingModal" class="modal-overlay">
+        <div class="modal-content max-w-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800">화물추적 가이드</h3>
+                <button id="closeTrackingModalBtn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x"></i></button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-sm text-gray-600">고객사 시스템에 화물추적 기능을 연동하려면 아래 URL을 사용하세요. URL의 끝에 운송장번호를 추가하면 바로 추적 페이지로 연결됩니다.</p>
+                <div>
+                    <label for="trackingUrl" class="block text-sm font-medium text-gray-700 mb-1">연동 URL</label>
+                    <div class="flex">
+                        <input id="trackingUrl" type="text" readonly value="https://tracker.logistics.com/tracking?id=" class="flex-grow bg-gray-100 border border-gray-300 rounded-l-md px-3 py-2 text-sm text-gray-700 focus:outline-none">
+                        <button id="copyUrlBtn" class="flex items-center justify-center px-4 bg-gray-200 text-gray-600 border-t border-r border-b border-gray-300 rounded-r-md hover:bg-gray-300">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                 <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0"><i data-lucide="info" class="h-5 w-5 text-blue-400"></i></div>
+                        <div class="ml-3">
+                            <p class="text-sm text-blue-700">예시: <code class="font-mono text-xs bg-blue-100 px-1 py-0.5 rounded">https://tracker.logistics.com/tracking?id=123456789012</code></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-4 mt-4">
+                    <p class="text-sm font-medium text-gray-700 mb-1">권장 팝업창 크기</p>
+                    <p class="text-sm text-gray-500">너비(width): <span class="font-semibold text-gray-700">760px</span>, 높이(height): <span class="font-semibold text-gray-700">600px</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상세 조정 페이지 -->
+    <div id="detailPage" class="page hidden p-6 lg:p-8">
+        <header class="mb-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-slate-800">상품 재고 조정 상세</h1>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-8 lg:col-span-1">
+                <section class="card">
+                    <h2 class="text-xl font-bold text-slate-700 mb-5 border-b border-slate-200 pb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                        SKU 정보
+                    </h2>
+                    <div id="sku-info-panel" class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                        <!-- JS로 데이터 렌더링 -->
+                    </div>
+                </section>
+                <section class="card">
+                    <h2 class="text-xl font-bold text-slate-700 mb-5 border-b border-slate-200 pb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                        상품 총 재고
+                    </h2>
+                    <div id="total-stock-panel" class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                        <!-- JS로 데이터 렌더링 -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Center Column -->
+            <div class="space-y-8 lg:col-span-1">
+                <section class="card h-full">
+                    <h3 class="text-xl font-bold text-slate-700 mb-5">로케이션별 재고 현황</h3>
+                    <div class="overflow-y-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-semibold text-slate-600">센터/존</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-slate-600">로케이션</th>
+                                    <th class="px-3 py-3 text-center font-semibold text-slate-600">가용</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-slate-600">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="location-list-table" class="divide-y divide-slate-200">
+                                <!-- JS로 로케이션 렌더링 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8 lg:col-span-1">
+                 <section id="adjustmentFormContainer" class="card disabled-form h-full">
+                    <h3 class="text-xl font-bold text-slate-700 mb-5">조정 내용 입력</h3>
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <p class="text-sm font-medium text-slate-500">선택된 로케이션 (원본)</p>
+                            <p id="selectedLocationInfo" class="text-base font-semibold text-indigo-600 mt-1">-</p>
+                        </div>
+                        <div>
+                            <label for="mainAdjustmentType" class="text-sm font-bold text-slate-600 mb-2 block">조정 유형</label>
+                            <select id="mainAdjustmentType" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent">
+                                <option value="adjust">재고 조정 (수량/정보 변경)</option>
+                                <option value="move">재고 이동</option>
+                                <option value="split">재고 분할</option>
+                            </select>
+                        </div>
+                        <hr class="border-slate-200"/>
+
+                        <!-- 재고 조정 폼 -->
+                        <div id="stockAdjustForm" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div><label for="adjustmentQuantity" class="text-sm font-bold text-slate-600 mb-2 block">변경 후 수량</label><input type="number" id="adjustmentQuantity" min="0" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"></div>
+                                <div><label class="text-sm font-bold text-slate-600 mb-2 block">조정 수량</label><p id="quantityChangeDisplay" class="mt-1 block w-full py-2.5 px-4 text-sm bg-slate-100 border rounded-lg h-[42px] flex items-center font-mono"></p></div>
+                            </div>
+                            <div><label for="stockStatus" class="text-sm font-bold text-slate-600 mb-2 block">재고 상태</label><select id="stockStatus" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"><option>정상</option><option>불량</option><option>미판매</option><option>유통기한임박</option></select></div>
+                            <div><label for="lotNumber" class="text-sm font-bold text-slate-600 mb-2 block">LOT 번호</label><input type="text" id="lotNumber" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"></div>
+                            <div><label for="expiryDate" class="text-sm font-bold text-slate-600 mb-2 block">유통기한</label><input type="text" data-date-input="true" id="expiryDate" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="YYYY-MM-DD"></div>
+                            <div><label for="mfgDate" class="text-sm font-bold text-slate-600 mb-2 block">제조일자</label><input type="text" data-date-input="true" id="mfgDate" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="YYYY-MM-DD"></div>
+                            <div>
+                                <label for="adjustmentReasonSelect" class="text-sm font-bold text-slate-600 mb-2 block required-label">조정 사유</label>
+                                <div class="space-y-2">
+                                    <select id="adjustmentReasonSelect" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"><option value="">사유 선택</option><option>데이터 수정</option><option>전산오류</option><option>유통기한 경과</option><option>실사재고</option><option>임가공</option><option>손실/파손</option><option>불량폐기</option><option value="기타">기타</option></select>
+                                    <textarea id="adjustmentReasonDirectInput" rows="3" class="hidden mt-1 block w-full text-sm p-4 border-slate-300 rounded-lg shadow-sm" placeholder="상세 사유를 입력하세요."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 재고 이동 폼 -->
+                        <div id="stockMoveForm" class="hidden space-y-6">
+                             <div><label for="moveQuantity" class="text-sm font-bold text-slate-600 mb-2 block required-label">이동 수량</label><input type="number" id="moveQuantity" min="1" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="이동할 수량"><p id="moveQuantityHelpText" class="mt-1 text-xs text-slate-500"></p></div>
+                             <div><label for="destinationLocation" class="text-sm font-bold text-slate-600 mb-2 block required-label">목적지 로케이션</label><div class="mt-1 flex rounded-lg shadow-sm"><input type="text" id="destinationLocation" class="flex-1 block w-full min-w-0 rounded-none rounded-l-lg py-2.5 px-4 text-sm border-slate-300" placeholder="로케이션 코드"><button id="openLocationSearchModalBtn" type="button" class="inline-flex items-center px-4 border border-l-0 border-slate-300 rounded-r-lg bg-slate-50 text-sm text-slate-600 hover:bg-slate-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg></button></div></div>
+                             <div><label for="moveReason" class="text-sm font-bold text-slate-600 mb-2 block">이동 사유</label><textarea id="moveReason" rows="3" class="mt-1 block w-full text-sm p-4 border-slate-300 rounded-lg shadow-sm" placeholder="재고 이동 사유를 입력하세요."></textarea></div>
+                        </div>
+
+                        <!-- 재고 분할 폼 -->
+                        <div id="stockSplitForm" class="hidden space-y-6">
+                           <h4 class="form-section-title">분할 정보 (원본 재고)</h4>
+                           <div><label for="splitQuantity" class="text-sm font-bold text-slate-600 mb-2 block required-label">분할 수량</label><input type="number" id="splitQuantity" min="1" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="분할할 수량"><p id="splitQuantityHelpText" class="mt-1 text-xs text-slate-500"></p></div>
+
+                           <h4 class="form-section-title pt-4">분할 생성 재고 정보</h4>
+                           <div class="space-y-4">
+                               <div><label for="splitDestinationLocation" class="text-sm font-bold text-slate-600 mb-2 block required-label">목적지 로케이션</label><div class="mt-1 flex rounded-lg shadow-sm"><input type="text" id="splitDestinationLocation" class="flex-1 block w-full min-w-0 rounded-none rounded-l-lg py-2.5 px-4 text-sm border-slate-300" placeholder="로케이션 코드"><button id="openSplitLocationSearchModalBtn" type="button" class="inline-flex items-center px-4 border border-l-0 border-slate-300 rounded-r-lg bg-slate-50 text-sm text-slate-600 hover:bg-slate-100"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg></button></div></div>
+                               <div><label for="splitStockStatus" class="text-sm font-bold text-slate-600 mb-2 block required-label">재고 상태</label><select id="splitStockStatus" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"><option>정상</option><option>불량</option><option>미판매</option><option>유통기한임박</option></select></div>
+                               <div><label for="splitLotNumber" class="text-sm font-bold text-slate-600 mb-2 block">LOT 번호</label><input type="text" id="splitLotNumber" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"></div>
+                               <div><label for="splitExpiryDate" class="text-sm font-bold text-slate-600 mb-2 block">유통기한</label><input type="text" data-date-input="true" id="splitExpiryDate" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="YYYY-MM-DD"></div>
+                               <div><label for="splitMfgDate" class="text-sm font-bold text-slate-600 mb-2 block">제조일자</label><input type="text" data-date-input="true" id="splitMfgDate" class="mt-1 block w-full py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm" placeholder="YYYY-MM-DD"></div>
+                           </div>
+                           <div><label for="splitReason" class="text-sm font-bold text-slate-600 mb-2 block required-label">분할 사유</label><textarea id="splitReason" rows="3" class="mt-1 block w-full text-sm p-4 border-slate-300 rounded-lg shadow-sm" placeholder="재고 분할 사유를 입력하세요 (예: 일부 불량 재고 분리)"></textarea></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <!-- Buttons Container -->
+        <div class="mt-8 flex justify-end gap-x-3">
+            <button id="detailPageCancelBtn" type="button" class="px-6 py-2.5 text-sm font-bold text-slate-700 bg-slate-200 rounded-lg hover:bg-slate-300">취소</button>
+            <button id="detailPageConfirmBtn" type="button" class="px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300">저장</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="reasonModal" class="modal-overlay">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg transform transition-all">
+            <header class="flex justify-between items-center p-5 border-b"><h3 class="text-lg font-bold">재고 수정 사유 입력</h3><button class="modal-close-btn text-2xl leading-none">&times;</button></header>
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-4 gap-x-4 gap-y-2 text-sm">
+                    <strong class="font-bold col-span-1">로케이션</strong><span id="reasonModalLocation" class="col-span-3 text-gray-700"></span>
+                    <strong class="font-bold col-span-1">수정 항목</strong><span id="reasonModalField" class="font-semibold text-gray-600 col-span-3"></span>
+                    <strong class="font-bold col-span-1">기존</strong><span id="reasonModalOldValue" class="text-red-600 font-bold col-span-3"></span>
+                    <strong class="font-bold col-span-1">변경</strong><span id="reasonModalNewValue" class="text-blue-600 font-bold col-span-3"></span>
+                </div>
+                <hr>
+                <div class="space-y-4">
+                     <div><label for="inlineReasonSelect" class="block text-sm font-medium text-gray-700 required-label">사유 선택</label><select id="inlineReasonSelect" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm sm:text-sm"><option value="">사유 선택</option><option>데이터 수정</option><option>전산오류</option><option>유통기한 경과</option><option>실사재고</option><option>임가공</option><option>손실/파손</option><option>불량폐기</option><option value="기타">기타</option></select></div>
+                     <div id="inlineReasonTextContainer" class="hidden">
+                        <label for="inlineReasonText" class="block text-sm font-medium text-gray-700">사유 직접 입력</label>
+                        <textarea id="inlineReasonText" rows="3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="구체적인 조정 사유를 입력하세요."></textarea>
+                     </div>
+                </div>
+            </div>
+            <footer class="bg-gray-50 px-6 py-4 flex justify-end gap-3"><button class="modal-close-btn px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">취소</button><button id="inlineSaveReasonBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">저장</button></footer>
+        </div>
+    </div>
+
+    <div id="locationSearchModal" class="modal-overlay">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform scale-95 modal-content">
+             <header class="flex justify-between items-center p-5 border-b border-slate-200"><h2 class="text-lg font-bold text-slate-800">로케이션 검색</h2><button id="closeLocationSearchModalBtn" class="text-slate-400 hover:text-slate-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button></header>
+            <div class="p-5 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-3 items-center">
+                    <select class="col-span-1 sm:col-span-1 md:col-span-1 py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"><option>센터 선택</option><option>인천1센터(청라)</option><option>인천2센터(원창)</option></select>
+                    <select class="col-span-1 sm:col-span-1 md:col-span-1 py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm"><option>존 선택</option><option>A-Zone</option><option>B-Zone</option></select>
+                    <input type="text" placeholder="로케이션 검색" class="col-span-2 sm:col-span-2 md:col-span-2 py-2.5 px-4 text-sm border-slate-300 rounded-lg shadow-sm">
+                    <button class="col-span-1 sm:col-span-1 md:col-span-1 text-sm font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 h-full">검색</button>
+                </div>
+                 <div class="border border-slate-200 rounded-lg overflow-hidden max-h-80 overflow-y-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-slate-50 sticky top-0"><tr><th class="px-4 py-3 text-left font-semibold text-slate-600">No</th><th class="px-4 py-3 text-left font-semibold text-slate-600">센터</th><th class="px-4 py-3 text-left font-semibold text-slate-600">존</th><th class="px-4 py-3 text-left font-semibold text-slate-600">로케이션</th></tr></thead>
+                        <tbody id="location-search-result-table" class="divide-y divide-slate-200"></tbody>
+                    </table>
+                </div>
+            </div>
+            <footer id="locationSearchModalFooter" class="flex justify-end items-center p-5 border-t border-slate-200 bg-slate-50 rounded-b-2xl"></footer>
+        </div>
+    </div>
+
+<script src="js/main.js"></script>
+
+</body>
+</html>
