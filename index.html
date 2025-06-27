@@ -26,6 +26,13 @@
                     <li class="lnb-menu-item active" data-menu="home"><a href="#"><i data-lucide="home"></i><span class="lnb-menu-item-text">홈</span></a></li>
                     <li class="lnb-menu-item" data-menu="announcement"><a href="#"><i data-lucide="bell"></i><span class="lnb-menu-item-text">공지사항</span></a></li>
                     <li class="lnb-menu-item has-submenu">
+                        <a href="#"><i data-lucide="shopping-cart"></i><span class="lnb-menu-item-text">주문관리</span><i data-lucide="chevron-down" class="submenu-toggle-icon"></i></a>
+                        <div class="submenu"><div>
+                            <a href="#" data-menu="manual-order-management">수동 주문관리</a>
+                            <a href="#" data-menu="auto-order-management">자동 주문 관리</a>
+                        </div></div>
+                    </li>
+                    <li class="lnb-menu-item has-submenu">
                         <a href="#"><i data-lucide="package"></i><span class="lnb-menu-item-text">입고 관리</span><i data-lucide="chevron-down" class="submenu-toggle-icon"></i></a>
                         <div class="submenu"><div>
                             <a href="#" data-menu="receipt-history">입고 내역</a>
@@ -45,8 +52,10 @@
                             <a href="#" data-menu="inventory-adjustment">재고 조정</a>
                         </div></div>
                     </li>
+                    <li class="lnb-menu-item" data-menu="product-management"><a href="#"><i data-lucide="box"></i><span class="lnb-menu-item-text">상품 관리</span></a></li>
+                    <li class="lnb-menu-item" data-menu="tracking"><a href="#"><i data-lucide="truck"></i><span class="lnb-menu-item-text">배송 조회</span></a></li>
                     <li class="lnb-menu-item" data-menu="stats"><a href="#"><i data-lucide="bar-chart-2"></i><span class="lnb-menu-item-text">통계</span></a></li>
-                    <li class="lnb-menu-item" data-menu="settings"><a href="#"><i data-lucide="settings"></i><span class="lnb-menu-item-text">설정</span></a></li>
+                    <li class="lnb-menu-item" data-menu="environment-settings"><a href="#"><i data-lucide="settings"></i><span class="lnb-menu-item-text">환경 설정</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -187,15 +196,19 @@
                     </div>
                 </div>
                 <!-- Other views -->
-                <div id="announcementView" class="main-content-view p-6"><div class="card p-6">공지사항 페이지</div></div>
-                <div id="receipt-historyView" class="main-content-view p-6"><div class="card p-6">입고 내역 페이지</div></div>
-                <div id="receipt-registerView" class="main-content-view p-6"><div class="card p-6">입고 등록 페이지</div></div>
-                <div id="shipment-historyView" class="main-content-view p-6"><div class="card p-6">출고 내역 페이지</div></div>
-                <div id="shipment-registerView" class="main-content-view p-6"><div class="card p-6">출고 등록 페이지</div></div>
-                <div id="statsView" class="main-content-view p-6"><div class="card p-6">통계 페이지</div></div>
-                <div id="settingsView" class="main-content-view p-6">
-                    <!-- 설정 콘텐츠 -->
-                    <h1 class="text-2xl font-bold">설정</h1>
+                <div id="announcementView" class="main-content-view hidden p-6"><div class="card p-6">공지사항 페이지</div></div>
+                <div id="manual-order-managementView" class="main-content-view hidden p-6"><div class="card p-6">수동 주문관리 페이지</div></div>
+                <div id="auto-order-managementView" class="main-content-view hidden p-6"><div class="card p-6">자동 주문 관리 페이지</div></div>
+                <div id="receipt-historyView" class="main-content-view hidden p-6"><div class="card p-6">입고 내역 페이지</div></div>
+                <div id="receipt-registerView" class="main-content-view hidden p-6"><div class="card p-6">입고 등록 페이지</div></div>
+                <div id="shipment-historyView" class="main-content-view hidden p-6"><div class="card p-6">출고 내역 페이지</div></div>
+                <div id="shipment-registerView" class="main-content-view hidden p-6"><div class="card p-6">출고 등록 페이지</div></div>
+                <div id="product-managementView" class="main-content-view hidden p-6"><div class="card p-6">상품 관리 페이지</div></div>
+                <div id="trackingView" class="main-content-view hidden p-6"><div class="card p-6">배송 조회 페이지</div></div>
+                <div id="statsView" class="main-content-view hidden p-6"><div class="card p-6">통계 페이지</div></div>
+                <div id="environment-settingsView" class="main-content-view hidden p-6">
+                    <!-- 환경 설정 콘텐츠 -->
+                    <h1 class="text-2xl font-bold">환경 설정</h1>
                     <p>애플리케이션 설정을 여기서 변경할 수 있습니다.</p>
                 </div>
                 <div id="inventory-adjustmentView" class="main-content-view hidden p-6 lg:p-8">
