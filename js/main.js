@@ -1,19 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 로그인 상태가 아니면 로그인 페이지로 리디렉션
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
-        window.location.href = 'login.html';
-        return; // 리디렉션 후 스크립트 실행 중단
+    // 인증 모듈 초기화
+    if (window.AuthModule) {
+        window.AuthModule.initAuth();
     }
-
-    // 로그아웃 버튼 이벤트 리스너
-    const logoutButton = document.getElementById('logout-button');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn'); // 로그인 상태 제거
-            window.location.href = 'login.html'; // 로그인 페이지로 리디렉션
-        });
-    }
-
+    
     lucide.createIcons();
 
     // LNB toggle logic
