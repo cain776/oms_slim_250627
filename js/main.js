@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. 인증 상태 확인 (가장 먼저 실행)
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'index.html';
+        return; // 인증되지 않았으면 나머지 스크립트를 실행하지 않음
+    }
+
+    // 2. 로그아웃 기능
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'index.html';
+        });
+    }
+    
     // 인증 모듈 초기화
     if (window.AuthModule) {
         window.AuthModule.initAuth();
@@ -13,49 +28,67 @@ document.addEventListener('DOMContentLoaded', () => {
         lnbToggle.addEventListener('click', () => lnb.classList.toggle('collapsed'));
     }
 
-    // --- Menu Logic with Accordion ---
-    const contentViews = document.querySelectorAll('.main-content-view');
+    // --- Centralized View Switching Logic ---
+    function switchView(viewId) {
+        // Hide all main content views by directly setting display style
+        document.querySelectorAll('.main-content-view').forEach(view => {
+            view.style.display = 'none';
+        });
+
+        // Specifically hide the inventory adjustment detail page
+        const inventoryDetailView = document.getElementById('detailPage');
+        if (inventoryDetailView) {
+            inventoryDetailView.style.display = 'none';
+        }
+
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+            // Show the target view
+            targetView.style.display = 'block';
+            
+            // If switching to the inventory view, ensure its main list page is visible
+            if (viewId === 'inventory-adjustmentView') {
+                const inventoryMainPage = document.getElementById('mainPage');
+                if (inventoryMainPage) {
+                    inventoryMainPage.style.display = 'block';
+                }
+            }
+        }
+    }
+
+    // --- Menu Click Handler ---
     lnb.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (!link) return;
+        
         e.preventDefault();
         const parentLi = link.closest('.lnb-menu-item');
         if (!parentLi) return;
+        
         const allMenuItems = lnb.querySelectorAll('.lnb-menu-item');
         const allSubmenuLinks = lnb.querySelectorAll('.submenu a');
         const hasSubmenu = parentLi.classList.contains('has-submenu');
         const isSubmenuLink = !!link.closest('.submenu');
-
-        const switchView = (targetId) => {
-            contentViews.forEach(view => {
-                const isActive = view.id === targetId;
-                view.classList.toggle('active', isActive);
-                if (isActive) {
-                    view.classList.remove('hidden');
-                }
-            });
-        };
+        
+        const targetViewId = (isSubmenuLink ? link.dataset.menu : parentLi.dataset.menu) + 'View';
 
         if (isSubmenuLink) {
-            const targetViewId = link.dataset.menu + 'View';
             allMenuItems.forEach(li => li.classList.remove('active'));
             allSubmenuLinks.forEach(a => a.classList.remove('active'));
-            parentLi.classList.add('active');
+            parentLi.classList.add('active'); // Keep parent accordion open
             link.classList.add('active');
-            switchView(targetViewId);
         } else if (hasSubmenu) {
-            lnb.querySelectorAll('.lnb-menu-item.has-submenu').forEach(item => {
-                if (item !== parentLi) item.classList.remove('submenu-open');
-            });
+            // Only toggle accordion, don't switch view
             parentLi.classList.toggle('submenu-open');
+            return; // Exit without switching view
         } else {
-            const targetViewId = parentLi.dataset.menu + 'View';
             lnb.querySelectorAll('.lnb-menu-item.has-submenu').forEach(item => item.classList.remove('submenu-open'));
             allMenuItems.forEach(li => li.classList.remove('active'));
             allSubmenuLinks.forEach(a => a.classList.remove('active'));
             parentLi.classList.add('active');
-            switchView(targetViewId);
         }
+
+        switchView(targetViewId);
     });
 
     // --- Search Popup Logic ---
@@ -74,21 +107,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Modals Logic ---
     function setupModal(modalId, openBtnId, closeBtnIds) {
         const modal = document.getElementById(modalId);
-        const openBtn = document.getElementById(openBtnId);
         if (!modal) return;
         
-        const openModal = () => modal.classList.add('active');
-        const closeModal = () => modal.classList.remove('active');
+        const openBtn = document.getElementById(openBtnId);
+        
+        const openModal = () => {
+            modal.classList.add('active'); // For modals using .active selector
+            if (modal.classList.contains('hidden')) {
+                modal.style.opacity = '0';
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                }, 10); // Delay for transition to kick in
+            }
+        };
+        const closeModal = () => {
+            // 'active' 클래스 기반 모달과 'hidden' 클래스 기반 모달 모두 지원
+            if (modal.classList.contains('fixed')) { // 'hidden' 기반 모달 식별자
+                 modal.style.opacity = '0';
+                 setTimeout(() => { modal.classList.add('hidden'); }, 300);
+            } else {
+                modal.classList.remove('active');
+            }
+        };
 
         if(openBtn) openBtn.addEventListener('click', openModal);
+        
         closeBtnIds.forEach(id => {
             const closeBtn = document.getElementById(id);
             if(closeBtn) closeBtn.addEventListener('click', closeModal);
         });
+
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
     }
+
+    setupModal('multiTrackModal', 'openMultiTrackModalBtn', ['closeMultiTrackModalBtn', 'cancelMultiTrackBtn']);
+    setupModal('trackingModal', 'openTrackingModalBtn', ['closeTrackingModalBtn']);
+    setupModal('popup-write', 'write-notice-btn', ['close-modal-btn', 'cancel-btn']);
 
     // --- Multi-Track Modal Tabs ---
     const multiTrackTabs = document.getElementById('multi-track-tabs');
@@ -196,6 +253,90 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Announcement Data and Rendering ---
+    const announcementData = [
+        { id: '중요', category: '시스템', title: '[안내] 시스템 정기점검 안내 (06/20)', date: '2025-06-15', new: false, attachment: true, important: true },
+        { id: 104, category: '중요', title: '[중요] 개인정보 처리방침 개정 안내', date: '2025-06-12', new: true, attachment: false, important: false },
+        { id: 103, category: '시스템', title: '[업데이트] v2.1 기능 업데이트 안내', date: '2025-06-10', new: false, attachment: false, important: false },
+        { id: 102, category: '물류', title: '[공지] 일부 연휴 기간 배송 지연 안내', date: '2025-06-08', new: false, attachment: false, important: false },
+        { id: 101, category: '뉴스', title: '[이벤트] 신규 고객 배송비 할인 이벤트', date: '2025-06-05', new: false, attachment: true, important: false },
+        // 추가 데이터
+        { id: 100, category: '시스템', title: '[안내] 서버 업데이트 안내', date: '2025-06-01', new: false, attachment: false, important: false },
+    ];
+
+    function renderHomeAnnouncements() {
+        const listContainer = document.getElementById('home-announcements-list');
+        if (!listContainer) return;
+
+        const latestAnnouncements = announcementData.slice(0, 5);
+        listContainer.innerHTML = ''; // 기존 목록 초기화
+
+        latestAnnouncements.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'flex justify-between items-center text-sm';
+            li.innerHTML = `
+                <a href="#" class="text-gray-700 hover:text-blue-600 truncate">${item.title}</a>
+                <span class="text-gray-400 flex-shrink-0 ml-2">${item.date.substring(5)}</span>
+            `;
+            listContainer.appendChild(li);
+        });
+    }
+
+    function renderAllAnnouncements() {
+        const tableBody = document.getElementById('notice-table-body');
+        if (!tableBody) return;
+
+        tableBody.innerHTML = ''; // 기존 목록 초기화
+        announcementData.forEach(item => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-100 hover:bg-gray-50 transition-colors';
+            
+            let idHtml = `<td class="p-4 text-gray-600 hidden md:table-cell">${item.id}</td>`;
+            if (item.important) {
+                idHtml = `<td class="p-4 text-gray-600 hidden md:table-cell">
+                              <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">중요</span>
+                          </td>`;
+            }
+
+            const titleHtml = `<td class="p-4 text-gray-800 font-medium">
+                                 <a href="#" class="hover:text-blue-600">${item.title}</a>
+                                 ${item.new ? '<span class="bg-blue-100 text-blue-600 text-xs font-semibold ml-2 px-2 py-0.5 rounded-full">New</span>' : ''}
+                               </td>`;
+            
+            const attachmentHtml = `<td class="p-4 text-gray-500 text-center">
+                                      ${item.attachment ? '<i data-lucide="paperclip" class="h-5 w-5 mx-auto text-gray-400"></i>' : ''}
+                                    </td>`;
+
+            row.innerHTML = `
+                ${idHtml}
+                ${titleHtml}
+                <td class="p-4 text-gray-600 hidden sm:table-cell">${item.category}</td>
+                <td class="p-4 text-gray-600 hidden sm:table-cell">관리자</td>
+                <td class="p-4 text-gray-500 text-sm">${item.date}</td>
+                ${attachmentHtml}
+            `;
+            tableBody.appendChild(row);
+        });
+        lucide.createIcons(); // 아이콘 렌더링
+    }
+    
+    // "더보기" 버튼 기능
+    const goToAnnouncementsBtn = document.getElementById('home-announcements-more');
+    if (goToAnnouncementsBtn) {
+        goToAnnouncementsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // LNB의 공지사항 메뉴를 찾아서 클릭 이벤트를 트리거
+            const announcementMenuLink = document.querySelector('.lnb-menu-item[data-menu="announcement"] > a');
+            if (announcementMenuLink) {
+                announcementMenuLink.click();
+            }
+        });
+    }
+
+    // 페이지 로드 시 공지사항 렌더링
+    renderHomeAnnouncements();
+    renderAllAnnouncements();
+
     // 재고 관리 스크립트 시작
     // --- 샘플 데이터 ---
     let database = {
@@ -253,27 +394,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openReasonModal() {
-        const { productSku, locationId, field, originalValue, newValue } = activeEdit;
-        const product = database[productSku]; const location = product.locations.find(l => l.id == locationId);
-        const fieldDisplayMap = { loc: '로케이션', lot: 'LOT 번호', expiry: '유통기한', current: '현재재고', status: '상태' };
-        document.getElementById('reasonModalLocation').textContent = `${location.center} > ${location.zone.replace('-Zone', '')} > ${field === 'loc' ? originalValue : location.loc}`;
-        document.getElementById('reasonModalField').textContent = fieldDisplayMap[field] || field;
-        document.getElementById('reasonModalOldValue').textContent = originalValue; document.getElementById('reasonModalNewValue').textContent = newValue;
-        inlineReasonSelect.value = ''; inlineReasonText.value = '';
-        inlineReasonTextContainer.classList.add('hidden');
-        openModal(reasonModal);
+        if(reasonModal) reasonModal.classList.add('active');
     }
 
     // 상세 페이지
     function showDetailPage(sku) {
         workingProductCopy = JSON.parse(JSON.stringify(database[sku]));
-        mainPage.classList.add('hidden'); detailPage.classList.remove('hidden');
+        const mainPage = document.getElementById('mainPage');
+        const detailPage = document.getElementById('detailPage');
+        if(mainPage) mainPage.style.display = 'none';
+        if(detailPage) detailPage.style.display = 'block';
         loadProductDetail(workingProductCopy);
     }
+
     function showMainPage() {
-        mainPage.classList.remove('hidden'); detailPage.classList.add('hidden');
+        const mainPage = document.getElementById('mainPage');
+        const detailPage = document.getElementById('detailPage');
+        if(mainPage) mainPage.style.display = 'block';
+        if(detailPage) detailPage.style.display = 'none';
         renderInventoryList();
     }
+
     function createInfoRow(label, value) { return `<div class="col-span-1"><p class="font-medium text-slate-500">${label}</p><p class="text-slate-800 font-semibold mt-1">${value || '-'}</p></div>`; }
     function createTotalStockRow(label, value, colorClass = 'text-slate-800') { return `<div class="col-span-1"><p class="font-medium text-slate-500">${label}</p><p class="${colorClass} font-extrabold text-xl mt-1">${(value || 0).toLocaleString()}</p></div>`; }
     function loadProductDetail(product) {
@@ -488,6 +629,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // 초기 렌더링
         renderInventoryList();
     }
-    setupModal('multiTrackModal', 'openMultiTrackModalBtn', ['closeMultiTrackModalBtn', 'cancelMultiTrackBtn']);
-    setupModal('trackingModal', 'openTrackingModalBtn', ['closeTrackingModalBtn']);
+
+    // Initialize first view - This is also moved to the top
+    // const firstMenu = document.querySelector('.lnb-menu-item a');
+    // if (firstMenu) {
+    //     firstMenu.click();
+    // }
 }); 

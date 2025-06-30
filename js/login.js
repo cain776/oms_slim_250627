@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 0. 로그인 상태 확인 (최우선 실행)
     if (localStorage.getItem('isLoggedIn') === 'true') {
-        window.location.href = 'index.html';
+        window.location.href = 'main.html';
         return;
     }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (id && password) {
                 // 로그인 성공 처리
                 localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'index.html';
+                window.location.href = 'main.html';
             } else {
                 alert('아이디와 비밀번호를 모두 입력해주세요.');
             }

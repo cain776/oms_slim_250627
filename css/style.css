@@ -76,7 +76,14 @@ body {
 
 .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
 .modal-overlay.active { opacity: 1; visibility: visible; }
-.modal-content { background-color: white; padding: 1.5rem; border-radius: 0.75rem; width: 90%; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); transform: scale(0.95); transition: transform 0.3s ease; }
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+}
 .modal-overlay.active .modal-content { transform: scale(1); }
 
 .bg-promo-gradient {
@@ -140,4 +147,179 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding: 1.5rem; /* p-6 */
     border-radius: 1rem; /* rounded-2xl */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Styles for Auto Order Management Page */
+.unified-main-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+}
+
+.toolbar-container {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #e5e7eb;
+    align-items: flex-start;
+}
+.toolbar-container::-webkit-scrollbar { height: 8px; }
+.toolbar-container::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 4px; }
+.toolbar-container::-webkit-scrollbar-track { background-color: #e5e7eb; }
+
+.button-group-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #4b5563;
+    margin-top: 2px;
+    font-weight: 500;
+    width: 100%;
+}
+
+.toolbar-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 72px;
+    margin-right: 8px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    word-break: keep-all;
+    text-align: center;
+    padding: 4px;
+}
+.toolbar-button:last-child { margin-right: 0; }
+.toolbar-button:hover { background-color: #2563eb; color: white; border-color: #1d4ed8; }
+.toolbar-button svg, .toolbar-button .icon-placeholder { margin-bottom: 4px; width: 24px; height: 24px; }
+.toolbar-button:hover svg { stroke: white; }
+.toolbar-button:hover .icon-placeholder { color: white; }
+.icon-placeholder { display: inline-flex; align-items: center; justify-content: center; font-weight: bold; color: #4b5563; }
+
+.order-search-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    max-width: 376px;
+}
+.search-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+.search-input {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    padding: 6px 40px 6px 16px;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.5;
+}
+.search-input::placeholder { font-size: 1rem; color: #9ca3af; }
+.search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+.inline-search-button {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 10px;
+    background-color: transparent; border: none;
+    color: #4b5563; cursor: pointer; transition: color 0.2s;
+}
+.inline-search-button:hover { color: #2563eb; }
+.inline-search-button svg { width: 20px; height: 20px; }
+
+.section-divider {
+    border-bottom: 1px solid #e5e7eb;
+    margin-top: 8px; margin-bottom: 8px;
+}
+.toolbar-section-padding { padding-bottom: 4px; }
+
+.table th, .table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.875rem; text-align: left; white-space: nowrap;
+}
+.table th { background-color: #f9fafb; color: #4b5563; font-weight: 500; }
+.table tr:hover { background-color: #f3f4f6; }
+.table-container {
+    max-height: calc(100vh - 540px);
+    overflow-y: auto; overflow-x: auto;
+}
+.table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+.table-container::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 4px; }
+.table-container::-webkit-scrollbar-track { background-color: #e5e7eb; }
+.status-chip { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+.status-paid { background-color: #d1fae5; color: #065f46; }
+.status-pending { background-color: #fef3c7; color: #92400e; }
+.status-shipped { background-color: #dbeafe; color: #1e40af; }
+
+.action-button-group-wrapper {
+    display: flex; flex-direction: column; align-items: center;
+    padding-right: 24px; margin-right: 24px;
+    border-right: 1px solid #e5e7eb; flex-shrink: 0;
+}
+.action-button-group-wrapper:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.actual-buttons-container { display: flex; margin-bottom: 4px; }
+
+/* Overriding some modal styles for order management if necessary */
+#orderSearchModal .modal-content {
+    max-width: 800px;
+}
+#orderSearchModal .modal-header {
+    background-color: #374151;
+    color: white;
+}
+.modal-form-group { margin-bottom: 16px; }
+.modal-form-group label { display: block; font-size: 0.875rem; color: #374151; margin-bottom: 4px; font-weight: 500; }
+.modal-input, .modal-select, .modal-textarea {
+    width: 100%; padding: 8px 12px;
+    border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.modal-input:focus, .modal-select:focus, .modal-textarea:focus {
+    outline: none; border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+.modal-textarea { min-height: 80px; resize: vertical; }
+.date-range-buttons button {
+    padding: 6px 12px; margin-right: 6px; margin-bottom: 6px;
+    border: 1px solid #d1d5db; border-radius: 6px;
+    font-size: 0.875rem; color: #374151;
+    background-color: #f9fafb;
+    cursor: pointer; transition: background-color 0.2s, border-color 0.2s;
+}
+.date-range-buttons button:hover, .date-range-buttons button.active {
+    background-color: #2563eb; color: white; border-color: #2563eb;
+}
+.list-search-area { background-color: #f3f4f6; padding: 16px; border-radius: 6px; }
+
+/* Custom scrollbar for webkit browsers from announcement.html */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#inventory-adjustmentView {
+    display: flex;
+    flex-direction: column;
 } 
