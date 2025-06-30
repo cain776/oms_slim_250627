@@ -71,23 +71,23 @@ body {
 }
 #search-popup.active { opacity: 1; visibility: visible; transform: translateY(0); }
 
-.promo-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #d1d5db; cursor: pointer; transition: background-color 0.3s; }
-.promo-dot.active { background-color: var(--blue-600); }
-
-.modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
-.modal-overlay.active { opacity: 1; visibility: visible; }
-.modal-content {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 500px;
-    overflow: hidden;
+.promo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: background-color 0.3s ease;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
-.modal-overlay.active .modal-content { transform: scale(1); }
+
+.promo-dot.active {
+    background-color: rgba(255, 255, 255, 1);
+}
 
 .bg-promo-gradient {
-    background-image: linear-gradient(to bottom right, #ef476f, #7209b7);
+    background: linear-gradient(to right, #6d28d9, #4f46e5); /* 보라색 계열 그라데이션 */
 }
 
 /* inventory.css from here */
@@ -320,6 +320,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 #inventory-adjustmentView {
+    --card-bg: white;
+    --card-padding: 1.5rem;
+    --card-border-radius: 1rem;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 50;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 0.5rem; /* 8px */
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 } 
